@@ -1,0 +1,34 @@
+{
+    "name": "farzai/php-types-guesser",
+    "description": "",
+    "type": "library",
+    "license": "MIT",
+    "keywords": [
+        "php",
+        "cast",
+        "value"
+    ],
+    "minimum-stability": "dev",
+    "authors": [
+        {
+            "name": "parsilver",
+            "email": "magician_canobi@hotmail.com"
+        }
+    ],
+    "require": {
+        "php": "^7.2"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "Farzai\\Guesser\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    }
+}
