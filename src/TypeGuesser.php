@@ -94,6 +94,14 @@ class TypeGuesser implements JsonSerializable
     /**
      * @return bool
      */
+    public function isString()
+    {
+        return is_string($this->getValue()) || $this->isJson();
+    }
+
+    /**
+     * @return bool
+     */
     public function isArray()
     {
         return is_array($this->getValue());
@@ -104,7 +112,51 @@ class TypeGuesser implements JsonSerializable
      */
     public function isJson()
     {
-        return false !== json_decode($this->getOriginalValue());
+        if (! is_string($this->getOriginalValue())) {
+            return false;
+        }
+
+        return null !== @json_decode($this->getOriginalValue());
+    }
+
+    /**
+     * @return bool
+     */
+    public function isBoolean()
+    {
+        return is_bool($this->getValue());
+    }
+
+    /**
+     * @return bool
+     */
+    public function isNumeric()
+    {
+        return is_numeric($this->getValue());
+    }
+
+    /**
+     * @return bool
+     */
+    public function isInteger()
+    {
+        if ($this->isNumeric()) {
+            return gettype($this->getValue()) === 'integer';
+        }
+
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isFloat()
+    {
+        if ($this->isNumeric()) {
+            return in_array(gettype($this->getValue()), ['float', 'double']);
+        }
+
+        return false;
     }
 
     /**

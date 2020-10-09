@@ -7,25 +7,82 @@ composer require farzai/php-types-guesser
 ```
 
 ### Example
+
+##### String type
 ```php
-use Farzai\Guesser\TypeGuesser
+use Farzai\Guesser\TypeGuesser;
 
-// --- String Type
 $guesser = TypeGuesser::of("This is message");
-echo $guesser; // Print "This is message"
-// is_string($guesser->getValue()) === true
 
+// Print "This is message"
+echo $guesser;
 
-// --- Array Type
+$guesser->isString() === true;
+```
+
+##### Array type
+```php
+use Farzai\Guesser\TypeGuesser;
+
 $guesser = TypeGuesser::of([1, 2]);
-echo $guesser; // Print "[1, 2]"
-// $guesser->isArray() === true
-// $guesser->isJson() === false
 
+ // Print "[1, 2]"
+echo $guesser;
 
-// ---- JSON Type
+$guesser->isArray() === true;
+$guesser->isJson() === false;
+```
+
+##### JSON Type
+```php
+use Farzai\Guesser\TypeGuesser;
+
 $guesser = TypeGuesser::of("[1, 2]");
+
 echo $guesser; // Print "[1, 2]"
-// $guesser->isArray() === true
-// $guesser->isJson() === true
+
+$guesser->isArray() === true;
+$guesser->isJson() === true;
+$guesser->isString() === true;
+```
+
+
+##### Boolean Type
+```php
+use Farzai\Guesser\TypeGuesser;
+
+// Try to enter string value
+$guesser = TypeGuesser::of("true");
+$guesser->isBoolean() === true;
+$guesser->getValue() === true;
+
+// Boolean type
+$guesser = TypeGuesser::of(true);
+$guesser->isBoolean() === true;
+$guesser->getValue() === true;
+```
+
+##### Numeric Type
+```php
+use Farzai\Guesser\TypeGuesser;
+
+$guesser = TypeGuesser::of("1");
+$guesser->isNumeric() === true;
+$guesser->isInteger() === true;
+$guesser->isFloat() === false;
+$guesser->getValue() === 1;
+
+
+$guesser = TypeGuesser::of(1.2);
+$guesser->isNumeric() === true;
+$guesser->isInteger() === false;
+$guesser->isFloat() === true;
+$guesser->getValue() === 1.2;
+
+
+$guesser = TypeGuesser::of("2.1");
+$guesser->isNumeric() === true;
+$guesser->isInteger() === false;
+$guesser->isFloat() === true;
+$guesser->getValue() === 2.1;
 ```
