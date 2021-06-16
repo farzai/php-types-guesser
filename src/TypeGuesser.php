@@ -74,7 +74,8 @@ class TypeGuesser implements JsonSerializable
             }
 
             // Json type
-            if ($json = @json_decode($value, true)) {
+            $json = @json_decode($value, true);
+            if (is_array($json)) {
                 $value = $json;
             }
         }
