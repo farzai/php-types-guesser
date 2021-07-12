@@ -1,6 +1,16 @@
 # php-types-guesser
 This package will helpful cast your value or guess your value type
 
+[![Build Status](https://travis-ci.com/parsilver/php-types-guesser.svg?branch=master)](https://travis-ci.com/parsilver/php-types-guesser)
+
+
+### Required
+```json
+{
+  "php": "^7.3||^8.0"
+}
+```
+
 ### Installation
 ```
 composer require farzai/php-types-guesser
