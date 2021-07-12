@@ -1,9 +1,24 @@
 <?php namespace Farzai\Guesser;
 
+use Farzai\Guesser\Expression\Expression;
+use Farzai\Guesser\Expression\UseValue;
 use JsonSerializable;
+use Farzai\Guesser\Types;
 
 class TypeGuesser implements JsonSerializable
 {
+    /**
+     * Support types
+     *
+     * @var string[]
+     */
+    private $casts = [
+        Types\NullType::class,
+        Types\NumericType::class,
+        Types\BooleanType::class,
+        Types\JsonType::class,
+    ];
+
     /**
      * @var mixed
      */
@@ -50,43 +65,20 @@ class TypeGuesser implements JsonSerializable
      */
     public static function toDynamicType($value)
     {
-        // Null
-        if (is_null($value)) {
-            return null;
-        }
+        $instance = new static;
 
-        // Numeric
-        if (is_numeric($value)) {
-            if (strrpos((string)$value, '.') === false) {
-                return (int)$value;
+        foreach ($instance->casts as $type) {
+            $value = (new $type)->cast($value);
+
+            if ($value instanceof Expression) {
+                $expression = $value;
+
+                $value = $value->resolve();
+
+                if ($expression instanceof UseValue) {
+                    return $value;
+                }
             }
-
-            return (float)$value;
-        }
-
-        // String
-        if (is_string($value)) {
-            // Boolean
-            if (strtolower($value) === "true") {
-                return true;
-            } else if (strtolower($value) === "false") {
-                return false;
-            }
-
-            // Json type
-            $json = @json_decode($value, true);
-            if (is_array($json)) {
-                $value = $json;
-            }
-        }
-
-        // Array
-        if (is_array($value)) {
-            foreach ($value as $key => $val) {
-                $value[$key] = static::toDynamicType($val);
-            }
-
-            return $value;
         }
 
         return $value;
@@ -141,11 +133,7 @@ class TypeGuesser implements JsonSerializable
      */
     public function isInteger()
     {
-        if ($this->isNumeric()) {
-            return gettype($this->getValue()) === 'integer';
-        }
-
-        return false;
+        return gettype($this->getValue()) === 'integer';
     }
 
     /**
@@ -153,11 +141,7 @@ class TypeGuesser implements JsonSerializable
      */
     public function isFloat()
     {
-        if ($this->isNumeric()) {
-            return in_array(gettype($this->getValue()), ['float', 'double']);
-        }
-
-        return false;
+        return in_array(gettype($this->getValue()), ['float', 'double']);
     }
 
     /**
